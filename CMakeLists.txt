@@ -9,13 +9,23 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 add_definitions(-Wall -g -D_DEBUG)
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
+find_package(PkgConfig)
+pkg_check_modules(GTKMM gtkmm-2.4) 
 
-include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS})
-link_libraries(${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
 
+include_directories(${GTKMM_INCLUDE_DIRS})
+link_libraries(${GTKMM_LIBRARIES})
 
 add_executable(${PROJECT_NAME}
 ${CMAKE_SOURCE_DIR}/archmine.cpp
-${CMAKE_SOURCE_DIR}/sound.cpp)
+${CMAKE_SOURCE_DIR}/rtns.cpp
+${CMAKE_SOURCE_DIR}/dialogs.cpp
+${CMAKE_SOURCE_DIR}/multiplayer.cpp
+${CMAKE_SOURCE_DIR}/graphics.cpp)
+
+find_package(X11 REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE X11::X11)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
